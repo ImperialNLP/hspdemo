@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo</title>
+</head>
+
+<script type='text/javascript'>
+var data = []
+window.onload = function() {
+    var jsonObject = {{ json_string | safe}};
+    for (var property in jsonObject) {
+        data.push(jsonObject[property]);
+    }
+};
+
+var load = () => {
+    document.getElementById('start').style = "display: None;"
+    document.getElementById('demo').style = "display: inline;"
+    next_instance = data.shift()
+    if ('parent' in next_instance) {
+        document.getElementById("content").innerHTML = "<div>Title: " + next_instance['title'] + "</div><br> \
+                                                        <div> <img src=" + next_instance['image'] + " height='500' width='500'> </div><br> \
+                                                        <div>Grandparent: " + next_instance['grandparent'] + "</div><br> \
+                                                        <div>Parent: " + next_instance['parent'] + "</div><br> \
+                                                        <div>Comment: " + next_instance['text'] + "</div>";
+    }
+    else if ('image' in next_instance) {
+        document.getElementById("content").innerHTML = "<div>Title: " + next_instance['title'] + "</div><br> \
+                                                        <div> <img src=" + next_instance['image'] + " height='500' width=500'> </div><br> \
+                                                        <div>Comment: " + next_instance['text'] + "</div>";
+    }
+    else if ('link' in next_instance) {
+        document.getElementById("content").innerHTML = "<div>Title: " + next_instance['title'] + "</div><br> \
+                                                        <div> <a href=" + next_instance['link'] + " target='_blank'>Link</a> </div><br> \
+                                                        <div>Comment: " + next_instance['text'] + "</div>";
+    }
+    else if ('title' in next_instance) {
+        document.getElementById("content").innerHTML = "<div>Title: " + next_instance['title'] + "</div><br> \
+                                                        <div>Comment: " + next_instance['text'] + "</div>";
+    }
+    else {
+        document.getElementById("content").innerHTML = "<div>Comment: " + next_instance['text'] + "</div>";
+    }
+
+}
+
+</script>
+
+<style>
+    body{
+      margin:0px;
+    }
+    .header {
+      height:100px;
+      background: grey;
+      border:1px solid #CCC;
+      width: 100%;
+      margin:0px auto;
+    }
+    .title {
+      margin-top: 50px;
+      black: white;
+    }
+    .center {
+      padding: 50px 0;
+      text-align: center;
+    }
+</style>
+
+
+<header class="header">
+    <center class="title"><h1><strong>Demo</strong></h1></center>
+</header>
+<body>
+
+<div class="center" style="">
+    <button id="start" onclick="load()">Start</button>
+</div>
+
+<div class="center" id="demo" style="display: None">
+    <div id="content"></div><br><br>
+    <div><button onclick="load()">Yes</button><button onclick="load()">No</button></div>
+</div>
+
+
+</body>
+</html>
